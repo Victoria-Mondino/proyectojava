@@ -1,36 +1,33 @@
-CREATE TABLE IF NOT EXISTS cliente (
-    clienteid BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE,
-    direccion VARCHAR(200),
-    telefono VARCHAR(20),
-    fecha_registro TIMESTAMP
+CREATE TABLE client(
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(75) NOT NULL,
+    lastname VARCHAR(75) NOT NULL,
+    docnumber VARCHAR(11) UNIQUE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS producto (
-    productoid BIGINT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    descripcion VARCHAR(500),
-    precio DECIMAL(10,2) NOT NULL,
-    stock INT NOT NULL,
-    fecha_actualizacion TIMESTAMP
+CREATE TABLE product(
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(75),
+    description VARCHAR(150),
+    code VARCHAR(50) UNIQUE NOT NULL,
+    stock INTEGER,
+    price DOUBLE
 );
 
-CREATE TABLE IF NOT EXISTS comprobante (
-    comprobanteid BIGINT AUTO_INCREMENT PRIMARY KEY,
-    fecha TIMESTAMP NOT NULL,
-    clienteid BIGINT NOT NULL,
-    total DECIMAL(10,2) NOT NULL,
-    cantidad_productos INT NOT NULL,
-    FOREIGN KEY (clienteid) REFERENCES cliente(clienteid)
+CREATE TABLE invoice(
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    created_at VARCHAR(12) NOT NULL,
+    total DOUBLE,
+    client_id INTEGER,
+    CONSTRAINT FK_CLIENT_ID FOREIGN KEY(client_id) REFERENCES client(id)
 );
 
-CREATE TABLE IF NOT EXISTS linea (
-    lineaid BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
-    productoid BIGINT NOT NULL,
-    comprobanteid BIGINT NOT NULL,
-    FOREIGN KEY (productoid) REFERENCES producto(productoid),
-    FOREIGN KEY (comprobanteid) REFERENCES comprobante(comprobanteid)
+CREATE TABLE invoice_detail(
+    invoice_detail_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    invoice_id INTEGER,
+    quantity INTEGER,
+    product_id INTEGER,
+    price DOUBLE,
+    CONSTRAINT FK_INVOICE_ID FOREIGN KEY(invoice_id) REFERENCES invoice(id),
+    CONSTRAINT FK_PRODUCT_ID FOREIGN KEY(product_id) REFERENCES product(id)
 );
